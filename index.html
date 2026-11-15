@@ -1,0 +1,189 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="신갑영의 기술 포트폴리오. C# 생산 시험 자동화, STM32 USB HID 검증, RTL-SDR 4FSK 분석.">
+<meta name="theme-color" content="#f6f5ef">
+<title>신갑영 | 장비 SW·테스트 자동화</title>
+<style>
+:root {
+  color-scheme: light;
+  --paper: #f6f5ef;
+  --white: #fffefa;
+  --ink: #182624;
+  --muted: #495b56;
+  --rule: #d9dfd7;
+  --green: #176451;
+  --board: #132a25;
+  --signal: #abefbe;
+  --mono: "IBM Plex Mono", "SFMono-Regular", Consolas, monospace;
+  --sans: "Pretendard", "Noto Sans KR", "Noto Sans CJK KR", "Malgun Gothic", "Apple SD Gothic Neo", sans-serif;
+}
+*, *::before, *::after { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body { margin: 0; background: var(--paper); color: var(--ink); font-family: var(--sans); line-height: 1.65; }
+a { color: inherit; text-underline-offset: .24em; }
+:focus-visible { outline: 3px solid #008368; outline-offset: 5px; }
+h1,h2,h3,p,figure { margin: 0; }
+.wrap { width: min(1120px, calc(100% - 104px)); margin-inline: auto; }
+.skip { position: absolute; inset: 8px auto auto 8px; transform: translateY(-160%); background: var(--white); padding: 8px 16px; z-index: 1; }
+.skip:focus { transform: translateY(0); }
+.site-header { border-bottom: 1px solid var(--rule); }
+.header-inner { min-height: 72px; display: flex; align-items: center; justify-content: space-between; gap: 16px; }
+.brand { display: flex; align-items: center; gap: 10px; text-decoration: none; font-size: 16px; font-weight: 800; }
+.brand-mark { width: 12px; height: 12px; border: 2px solid var(--green); box-shadow: inset 0 0 0 2px var(--paper); background: var(--green); }
+nav { display: flex; gap: clamp(12px, 3.4vw, 32px); align-items: center; }
+nav a { font-size: 13px; font-weight: 650; text-decoration: none; white-space: nowrap; }
+nav a:hover, .project-jumps a:hover { color: var(--green); text-decoration: underline; }
+.hero { padding-block: clamp(54px, 9vw, 110px) clamp(46px, 7vw, 83px); display: grid; grid-template-columns: 1.18fr 1fr; align-items: center; gap: clamp(28px, 6vw, 76px); }
+.role { font-size: 13px; color: var(--green); font-weight: 750; letter-spacing: .025em; }
+h1 { margin-block: 14px 20px; font-size: clamp(35px, 4.6vw, 69px); line-height: 1.15; letter-spacing: -.075em; font-weight: 800; }
+h1 span { white-space: nowrap; display: block; }
+.hero p:not(.role) { max-width: 420px; font-size: clamp(15px, 1.5vw, 17px); color: var(--muted); word-break: keep-all; }
+.actions { margin-top: 30px; display: flex; flex-wrap: wrap; gap: 8px; }
+.button { display: inline-flex; align-items: center; justify-content: center; gap: 12px; padding: 10px 15px; border: 1px solid #b7c5bd; border-radius: 4px; font-size: 13px; font-weight: 750; text-decoration: none; }
+.button.primary { background: var(--green); color: white; border-color: var(--green); }
+.button:hover { background: #e5ede5; }
+.button.primary:hover { background: #104c3e; }
+.board { position: relative; background: var(--board); border: 1px solid var(--board); color: #edfff2; border-radius: 7px; overflow: hidden; padding: clamp(17px, 2.4vw, 31px); background-image: linear-gradient(#bad2b815 1px, transparent 1px), linear-gradient(90deg, #bad2b815 1px, transparent 1px); background-size: 22px 22px; }
+.board figcaption { color: #c5ddce; font-size: 13px; margin-bottom: 22px; }
+.board ol { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: 1fr 1fr; row-gap: 24px; column-gap: 14px; }
+.board li { position: relative; min-height: 67px; display: grid; place-content: center; text-align: center; border: 1px solid #6a8b7b; border-radius: 4px; background: #1e3931; padding: 8px 4px; font-size: 13px; font-weight: 700; }
+.board li:first-child, .board li:last-child { grid-column: 1 / -1; border-color: #80ae93; }
+.board li:first-child { color: var(--signal); }
+.board li:not(:last-child)::after { content: ""; position: absolute; inset: auto auto -25px 50%; width: 1px; height: 24px; background: #80ae93; }
+.board li:not(:first-child):not(:last-child)::before { content: ""; position: absolute; inset: -13px auto auto 50%; width: 1px; height: 12px; background: #80ae93; box-sizing: border-box; }
+.board li:nth-child(2)::before { border-top: 1px solid #80ae93; border-left: 1px solid #80ae93; width: calc(50% + 8px); background: transparent; }
+.board li:nth-child(3)::before { right: 50%; left: auto; border-top: 1px solid #80ae93; border-right: 1px solid #80ae93; width: calc(50% + 8px); background: transparent; }
+.board li small { display: block; font: 11px/1.6 var(--mono); font-weight: 400; color: #c5ddce; }
+.project-jumps { display: grid; grid-template-columns: 1fr 1fr 1fr; border-block: 1px solid var(--rule); padding: 0; margin-block: 0; list-style: none; }
+.project-jumps li + li { border-inline-start: 1px solid var(--rule); }
+.project-jumps a { display: flex; justify-content: space-between; gap: 8px; align-items: center; padding: 14px clamp(11px, 2.6vw, 24px); font-size: 13px; font-weight: 750; text-decoration: none; }
+.project-jumps span { color: var(--green); }
+.work { padding-block: clamp(54px, 8vw, 86px); }
+h2 { margin-bottom: 18px; font-size: clamp(28px, 4vw, 42px); letter-spacing: -.055em; line-height: 1.22; }
+.project { display: grid; grid-template-columns: .85fr 1.25fr; gap: clamp(23px, 5vw, 68px); padding-block: 32px; border-top: 1px solid var(--rule); scroll-margin-top: 22px; }
+.project:last-child { border-bottom: 1px solid var(--rule); }
+.stack { font-family: var(--mono); color: var(--green); font-size: 12px; line-height: 1.55; }
+.project h3 { margin-block: 8px; font-size: clamp(22px, 2.8vw, 31px); line-height: 1.32; letter-spacing: -.06em; word-break: keep-all; }
+.project-body { color: var(--muted); font-size: 15px; word-break: keep-all; }
+.project-body p + p { margin-top: 11px; }
+.project-body strong { color: var(--ink); }
+.project-body code { font-family: var(--mono); font-size: .88em; }
+.measure { margin-top: 18px; padding: 13px 16px; background: var(--white); border-left: 2px solid var(--green); font-size: 13px; color: var(--muted); }
+.measure strong { color: var(--green); font-family: var(--mono); font-size: 16px; }
+.career { background: #e9eee6; padding-block: 54px 60px; }
+.career .wrap { display: grid; grid-template-columns: .85fr 1.25fr; gap: clamp(16px, 5vw, 68px); }
+.career p, .career li { font-size: 15px; color: var(--muted); word-break: keep-all; }
+.career ul { margin: 0; padding: 0; list-style: none; }
+.career li + li { margin-top: 9px; }
+.career strong { color: var(--ink); }
+footer .wrap { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 12px 20px; align-items: center; padding-block: 20px; color: var(--muted); font-size: 13px; }
+footer a { font-weight: 700; }
+@media(max-width: 740px) {
+  .wrap { width: calc(100% - 40px); }
+  .hero, .project, .career .wrap { grid-template-columns: 1fr; }
+  .hero { gap: 34px; }
+  h1 { font-size: clamp(32px, 7.4vw, 55px); }
+  .project { gap: 10px; padding-block: 27px; }
+}
+@media(max-width: 380px) {
+  .wrap { width: calc(100% - 28px); }
+  .header-inner { min-height: 60px; gap: 9px; }
+  nav { gap: 11px; }
+  .project-jumps a { padding-inline: 7px; font-size: 11px; }
+}
+@media(prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+</style>
+<script type="text/javascript" nonce="56653da18f4a43f4a14b85bf582" src="//local.adguard.org?ts=1794741153800&amp;type=content-script&amp;dmn=chatgpt.com&amp;url=https%3A%2F%2Fchatgpt.com%2Fbackend-api%2Festuary%2Fcontent%3Fid%3Dfile_00000000338082069ae07800e581c4ef%26fn%3Dindex.html%26cd%3Dattachment%26ts%3D498539%26p%3Dfs%26cid%3D1%26sig%3D1b92e6a526ea7c5c8368ecfcb9c1878207222ab8a8a0f4ce97caf4d0ba82d11e%26v%3D0&amp;app=chrome.exe&amp;css=2&amp;js=1&amp;rel=1&amp;rji=1&amp;sbe=1"></script><script type="text/javascript" nonce="56653da18f4a43f4a14b85bf582" src="//local.adguard.org?ts=1794741153800&amp;name=AdGuard%20Extra&amp;name=AdGuard%20Popup%20Blocker&amp;type=user-script"></script></head>
+<body id="top">
+<a class="skip" href="#main">본문으로 바로 가기</a>
+<header class="site-header">
+  <div class="wrap header-inner">
+    <a class="brand" href="#top"><span class="brand-mark" aria-hidden="true"></span>신갑영</a>
+    <nav aria-label="주 메뉴">
+      <a href="#work">프로젝트</a>
+      <a href="#career">경력</a>
+      <a href="https://github.com/sgy329">GitHub ↗</a>
+    </nav>
+  </div>
+</header>
+<main id="main">
+  <section class="wrap hero" aria-labelledby="hero-title">
+    <div>
+      <p class="role">장비 소프트웨어 엔지니어</p>
+      <h1 id="hero-title"><span>장비 시험 자동화와</span><span>임베디드 SW 검증</span></h1>
+      <p>C#으로 생산 시험 프로그램을 개발하고, STM32 펌웨어와 RF 계측 데이터로 장비의 동작을 검증해 왔습니다.</p>
+      <div class="actions">
+        <a class="button primary" href="#work">프로젝트 보기 <span aria-hidden="true">↓</span></a>
+        <a class="button" href="./Shin_GabYeong_Portfolio.pdf" download>포트폴리오 PDF <span aria-hidden="true">↓</span></a>
+      </div>
+    </div>
+    <figure class="board">
+      <figcaption>무전기 생산 시험 흐름</figcaption>
+      <ol aria-label="시험 프로그램의 장비 연동 및 결과 처리">
+        <li>C# 시험 프로그램<small>WinForms / WPF</small></li>
+        <li>무전기 제어<small>UART / USB</small></li>
+        <li>RF 계측기 제어<small>GPIB / LAN</small></li>
+        <li>측정값 판정 및 결과 저장</li>
+      </ol>
+    </figure>
+  </section>
+
+  <ul class="wrap project-jumps" aria-label="사례 바로 가기">
+    <li><a href="#automation">생산 시험 자동화 <span aria-hidden="true">↓</span></a></li>
+    <li><a href="#firmware">USB HID 검증 <span aria-hidden="true">↓</span></a></li>
+    <li><a href="#rf">4FSK 계측 분석 <span aria-hidden="true">↓</span></a></li>
+  </ul>
+
+  <section class="wrap work" id="work" aria-labelledby="work-title">
+    <h2 id="work-title">대표 프로젝트</h2>
+    <article class="project" id="automation">
+      <div>
+        <p class="stack">C# / WinForms / WPF</p>
+        <h3>무전기 생산 시험 자동화</h3>
+      </div>
+      <div class="project-body">
+        <p>작업자가 계측기를 직접 설정하던 공정을 C# 시험 프로그램으로 자동화했습니다. UART·USB로 무전기를, GPIB·LAN으로 계측기를 제어해 음성 품질, 채널 스캔, 비상 호출 시험을 실행했습니다.</p>
+        <p><strong>현장 적용</strong> 시험 조건 설정부터 판정과 결과 저장까지 한 프로그램으로 처리했습니다. 작업자 피드백을 반영해 시험 화면을 수정하고 현지 생산 라인에서 프로그램 사용을 교육했습니다.</p>
+      </div>
+    </article>
+    <article class="project" id="firmware">
+      <div>
+        <p class="stack">STM32C071 / USB HID / EP0</p>
+        <h3>간헐 USB HID 인식 실패 개선</h3>
+      </div>
+      <div class="project-body">
+        <p>특정 무전기 호스트에서 키패드 마이크 인식이 간헐적으로 실패하는 현상을 실제 장비로 재현했습니다. <code>SET_ADDRESS</code> 요청과 <code>EP0 STATUS IN</code> 처리 경로를 추적해 USB 스택의 초기화 로직을 수정했습니다.</p>
+        <p><strong>검증</strong> 동일 호스트에 반복 연결해 수정 전후의 인식 성공 여부를 비교하고 실패 빈도가 낮아진 것을 확인했습니다.</p>
+      </div>
+    </article>
+    <article class="project" id="rf">
+      <div>
+        <p class="stack">RTL-SDR / Python / I/Q</p>
+        <h3>4FSK 변조 품질 분석</h3>
+      </div>
+      <div class="project-body">
+        <p>RTL-SDR로 수집한 I/Q 데이터에서 반송파 오프셋을 보정하고 심볼 판정 시점을 찾아, 주파수 편이와 FSK Error를 계산하는 Python 스크립트를 작성했습니다.</p>
+        <p><strong>검증</strong> Aeroflex 3920과 비교해 측정 차이를 확인했습니다. 생산 검사 적용을 위해서는 동일 조건에서 계측기와의 일치도를 추가 검증해야 합니다.</p>
+        <p class="measure">캡처 예시의 4점 환산 편이 <strong>±940.81 Hz</strong> · FSK Error 중앙값 <strong>1.948%</strong></p>
+      </div>
+    </article>
+  </section>
+
+  <section class="career" id="career" aria-labelledby="career-title">
+    <div class="wrap">
+      <div><h2 id="career-title">경력 및 보유 기술</h2><p>무선 인증 시험에서 쌓은 계측·문서화 경험을 생산 시험 SW와 펌웨어 검증에 활용해 왔습니다.</p></div>
+      <ul>
+        <li><strong>장비 시험 SW</strong> · C#, WinForms, WPF, VISA/GPIB, LAN</li>
+        <li><strong>임베디드</strong> · STM32, USB HID, UART</li>
+        <li><strong>계측 및 인증</strong> · RF·SAR, Python I/Q 분석, KC·FCC, ISO/IEC 17025</li>
+        <li><strong>자격</strong> · 무선설비기사, 방송통신기사, 정보처리기사</li>
+      </ul>
+    </div>
+  </section>
+</main>
+<footer><div class="wrap"><span>신갑영 · 기술 포트폴리오</span><a href="#top">맨 위로 ↑</a></div></footer>
+</body>
+</html>
